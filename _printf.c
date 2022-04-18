@@ -40,7 +40,7 @@ int printID(char next, va_list list)
 
 /**
 * _printf - prints anything
-* @format: pointer to string that contains specifiers
+* @format: pointer to string that contains specifier
 * Return: number of characters printed
 **/
 
@@ -86,5 +86,6 @@ int _printf(const char *format, ...)
 		}
 	}
 	va_end(list);
+
 	return (charPrinted);
 }

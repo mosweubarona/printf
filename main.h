@@ -11,7 +11,7 @@ int _printf(const char *format, ...);
 
 /**
 * struct print - structure for printing various types
-* @t: type to print
+* @t: type to printt
 * @f: function to print
 */
 
