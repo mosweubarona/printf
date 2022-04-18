@@ -1,91 +1,77 @@
 #include "main.h"
 #include <stdio.h>
-#include <stdlib>
-
 /**
-* printID - print char
-* @next: character after %
-* @list: argument
-* Return: charectotrs
-*/
-
-int printID(char next, va_list list)
+  * find_function - function that finds formats for _printf
+  * calls the corresponding function.
+  * @format: format (char, string, int, decimal)
+  * Return: NULL or function associated ;
+  */
+int (*find_function(const char *format))(va_list)
 {
-	int functsIndex;
-
-	print functs[] = {
-	{"c", print_char},
-	{"s", print_str},
-	{NULL, NULL}
+	unsigned int i = 0;
+	code_f find_f[] = {
+		{"c", print_char},
+		{"s", print_string},
+		{"i", print_int},
+		{"d", print_dec},
+		{"r", print_rev},
+		{"b", print_bin},
+		{"u", print_unsig},
+		{"o", print_octal},
+		{"x", print_x},
+		{"X", print_X},
+		{"R", print_rot13},
+		{NULL, NULL}
 	};
 
-/*
-* int print_c(va_list c);
-* int print_s(va_list s);
-* int print_S(va_list S);
-* int print_rs(va_list rs);
-* int print_rot(va_list ro);
-* int _print_i(va_list vi);
-* int _print_b(va_list b);
-*/
-
-	for (functsIndex = 0; functs[functsIndex].t != NULL; functsIndex++)
+	while (find_f[i].sc)
 	{
-		if (functs[functsIndex].t[0] == next)
-			return (functs[functsIndex].f(list));
+		if (find_f[i].sc[0] == (*format))
+			return (find_f[i].f);
+		i++;
 	}
-	return (0);
+	return (NULL);
 }
-
-
 /**
-* _printf - prints anything
-* @format: pointer to string that contains specifier
-* Return: number of characters printed
-**/
-
+  * _printf - function that produces output according to a format.
+  * @format: format (char, string, int, decimal)
+  * Return: size the output text;
+  */
 int _printf(const char *format, ...)
 {
-	unsigned int i;
-	int identifierPrinted = 0, charPrinted = 0;
-	va_list list;
+	va_list ap;
+	int (*f)(va_list);
+	unsigned int i = 0, cprint = 0;
 
-	va_start(list, format);
 	if (format == NULL)
 		return (-1);
-
-	for (i = 0; format[i] != '\0'; i++)
+	va_start(ap, format);
+	while (format[i])
 	{
-		if (format[i] != '%')
+		while (format[i] != '%' && format[i])
 		{
 			_putchar(format[i]);
-			charPrinted++;
-			continue;
-		}
-		if (format[i + 1] == '%')
-		{
-			_putchar('%');
-			charPrinted++;
+			cprint++;
+			return (cprint);
+		f = find_function(&format[i + 1]);
+		if (f != NULL)
 			i++;
+		}
+		if (format[i] == '\0')
+		{
+			cprint += f(ap);
+			i += 2;
 			continue;
 		}
-
-		if (format[i + 1] == '\0')
+		if (!format[i + 1])
 			return (-1);
-
-		identifierPrinted = printID(format[i + 1], list);
-		if (identifierPrinted == -1 || identifierPrinted != 0)
+		_putchar(format[i]);
+		cprint++;
+		if (format[i + 1] == '%')
+			i += 2;
+		else
 			i++;
-		if (identifierPrinted > 0)
-			charPrinted += identifierPrinted;
-
-		if (identifierPrinted == 0)
-		{
-			_putchar('%');
-			charPrinted++;
-		}
 	}
-	va_end(list);
-
-	return (charPrinted);
+	va_end(ap);
+	return (cprint);
 }
