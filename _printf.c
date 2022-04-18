@@ -21,12 +21,16 @@ int _printf(const char *format, ...)
 		if (format[i] != '%')
 		{
 			_putchar(format[i]);
-		else if (format[i] == '%' && format[i + 1] == '\0')
 			count++;
 		}
+		else if (format[i] == '%' && format[i + 1] == '\0')
+		{
 			return (-1);
+		}
 		else if (format[i] == '\0')
+		{
 			return (count);
+		}
 		else if (format[i] == '%')
 		{
 			f = getspecifier(format, i + 1);
