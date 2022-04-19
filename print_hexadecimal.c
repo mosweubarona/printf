@@ -21,7 +21,7 @@ int print_hex_base(va_list arg, char _case)
 
 /**
  * print_hex - headecimal
- * @arg: argument
+ * @arg: arguments
  * Return: digits
  */
 
@@ -32,7 +32,7 @@ int print_hex(va_list arg)
 
 /**
  * print_HEX - hexa in caps
- * @arg: argument
+ * @arg: arguments
  * Return: number of digits
  */
 
