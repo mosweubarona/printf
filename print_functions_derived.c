@@ -60,7 +60,7 @@ int print_oct(va_list arg)
 
 /**
  * print_unsignedIntToHex - unsigned
- * @num: number
+ * @num: numbers
  * @_case: letter a
  * Return: char printed
  */
