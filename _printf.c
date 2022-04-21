@@ -1,87 +1,49 @@
 #include "main.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 /**
-* printIdentifiers - print char
-* @next: character after %
-* @arg: argument
-* Return: charectotrs
-*/
-
-int printIdentifiers(char next, va_list arg)
-{
-	int functsIndex;
-
-	identifierStruct functs[] = {
-		{"c", print_char},
-		{"s", print_str},
-		{"d", print_int},
-		{"i", print_int},
-		{"u", print_unsigned},
-		{"b", print_unsignedToBinary},
-		{"o", print_oct},
-		{"x", print_hex},
-		{"X", print_HEX},
-		{"S", print_STR},
-		{NULL, NULL}
-	};
-
-	for (functsIndex = 0; functs[functsIndex].indentifier != NULL; functsIndex++)
-	{
-		if (functs[functsIndex].indentifier[0] == next)
-			return (functs[functsIndex].printer(arg));
-	}
-	return (0);
-}
-
-
-/**
-* _printf - prints anything
-* @format: pointer to string that contains specifiers
-* Return: number of characters printed
-**/
-
+ * _printf - prints anything
+ * @format: the format string
+ *
+ * Return: number of bytes printed
+ */
 int _printf(const char *format, ...)
 {
-	unsigned int i;
-	int identifierPrinted = 0, charPrinted = 0;
-	va_list arg;
+	int sum = 0;
+	va_list ap;
+	char *p, *start;
+	params_t params = PARAMS_INIT;
 
-	va_start(arg, format);
-	if (format == NULL)
+	va_start(ap, format);
+
+	if (!format || (format[0] == '%' && !format[1]))
 		return (-1);
-
-	for (i = 0; format[i] != '\0'; i++)
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (p = (char *)format; *p; p++)
 	{
-		if (format[i] != '%')
+		init_params(&params, ap);
+		if (*p != '%')
 		{
-			_putchar(format[i]);
-			charPrinted++;
+			sum += _putchar(*p);
 			continue;
 		}
-		if (format[i + 1] == '%')
+		start = p;
+		p++;
+		while (get_flag(p, &params)) /* while char at p is flag char */
 		{
-			_putchar('%');
-			charPrinted++;
-			i++;
-			continue;
+			p++; /* next char */
 		}
-
-		if (format[i + 1] == '\0')
-			return (-1);
-
-		identifierPrinted = printIdentifiers(format[i + 1], arg);
-		if (identifierPrinted == -1 || identifierPrinted != 0)
-			i++;
-		if (identifierPrinted > 0)
-			charPrinted += identifierPrinted;
-		if (identifierPrinted == 0)
-		{
-			_putchar('%');
-			charPrinted++;
-		}
+		p = get_width(p, &params, ap);
+		p = get_precision(p, &params, ap);
+		if (get_modifier(p, &params))
+			p++;
+		if (!get_specifier(p))
+			sum += print_from_to(start, p,
+				params.l_modifier || params.h_modifier ? p - 1 : 0);
+		else
+			sum += get_print_func(p, ap, &params);
 	}
-	va_end(arg);
-	return (charPrinted);
+	_putchar(BUF_FLUSH);
+	va_end(ap);
+	return (sum);
 }
