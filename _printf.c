@@ -61,6 +61,7 @@ int _printf(const char *format, ...)
 			continue;
 		}
 		if (format[i + 1] == '%')
+		{
 			_putchar('%');
 			charPrinted++;
 			i++;
