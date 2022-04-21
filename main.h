@@ -13,7 +13,7 @@ int print_unsigned(va_list arg);
 int print_char(va_list arg);
 int print_str(va_list arg);
 int print_percent(void);
-void print_binary(unsigned int n, unsigned int* printed);
+void print_binary(unsigned int n, unsigned int *printed);
 int print_unsignedToBinary(va_list arg);
 int print_oct(va_list arg);
 int print_unsignedIntToHex(unsigned int num, char _case);
@@ -24,15 +24,15 @@ int print_STR(va_list arg);
 int print_R(va_list R);
 
 /**
-
 * struct identifierStruct - structure for printing various types
 * @indentifier: type to print
 * @printer: function to print
 */
+
 typedef struct identifierStruct
 {
-        char *indentifier;
-        int (*printer)(va_list);
+	char *indentifier;
+	int (*printer)(va_list);
 } identifierStruct;
 
 
